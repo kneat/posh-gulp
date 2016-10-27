@@ -1,0 +1,17 @@
+{
+  "name": "posh-gulp",
+  "version": "1.0.0",
+  "description": "write gulp tasks in powershell",
+  "keywords": [
+    "powershell",
+    "posh",
+    "gulp"
+  ],
+  "author": "Trevor Power",
+  "license": "ISC",
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "split": "^1.0.0",
+    "xml2js": "^0.4.17"
+  }
+}
