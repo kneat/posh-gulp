@@ -1,12 +1,10 @@
 Import-Module ./Gulp -force
 
-Start-Tasks $args
+Add-Task "task one"
 
-New-Task "task one"
-
-New-Task "posh:simple" ("task one", "simple") {
+Add-Task "posh:simple" ("task one", "simple") {
     Write-Host 'simple from powershell'
 }
 
-Stop-Tasks
+Stop-Tasks $args
 

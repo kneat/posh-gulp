@@ -1,24 +1,29 @@
-function Start-Tasks($execute)
-{
-    $script:execute = $execute
-    $script:tasks = @{}
-} 
+$script:taskDeps = @{}
+$script:taskBlocks = @{}
 
-function New-Task($name, $deps, $action){
-    if ($script:execute -eq $name) {
-        Invoke-Command $action
-    } else {
-        $script:tasks[$name] = $deps        
-    }
+function Add-Task($name, $deps, $action){
+    $script:taskDeps[$name] = $deps        
+    $script:taskBlocks[$name] = $action.ToString()
 }
 
-function Stop-Tasks()
+function Export-Tasks()
 {
-    if (!$script:execute) {
-        $script:tasks | ConvertTo-Json -Compress   
+    $script:taskDeps | ConvertTo-Json -Compress   
+}
+
+function Invoke-Task($name)
+{
+    $task = [ScriptBlock]::Create($script:taskBlocks[$name])
+    Invoke-Command $task
+}
+
+function Stop-Tasks($execute)
+{
+    if ($execute) {
+        Invoke-Task $execute
+    } else {
+        Export-Tasks        
     }
 } 
 
-Export-ModuleMember -Function Start-Tasks
-Export-ModuleMember -Function New-Task
-Export-ModuleMember -Function Stop-Tasks
+Export-ModuleMember -Function Add-Task, Stop-Tasks
