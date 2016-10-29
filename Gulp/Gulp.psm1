@@ -17,7 +17,7 @@ function Invoke-Task($name)
     Invoke-Command $task
 }
 
-function Stop-Tasks($execute)
+function Publish-Tasks($execute)
 {
     if ($execute) {
         Invoke-Task $execute
@@ -26,4 +26,4 @@ function Stop-Tasks($execute)
     }
 } 
 
-Export-ModuleMember -Function Add-Task, Stop-Tasks
+Export-ModuleMember -Function Add-Task, Publish-Tasks

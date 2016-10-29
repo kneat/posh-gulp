@@ -6,5 +6,5 @@ Add-Task "posh:simple" ("task one", "simple") {
     Write-Host 'simple from powershell'
 }
 
-Stop-Tasks $args
+Publish-Tasks $args
 
