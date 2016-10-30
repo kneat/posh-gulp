@@ -3,8 +3,8 @@ const pulp = require('./');
 
 pulp('./tasks.ps1');
 
-gulp.task('simple', (cb) => {
-   console.log('simple gulp task');
+gulp.task('build', (cb) => {
+   console.log('building');
    cb();
 });
 
