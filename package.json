@@ -7,6 +7,11 @@
     "posh",
     "gulp"
   ],
+  "repository" :
+  {
+    "type" : "git",
+    "url" : "https://github.com/trevorpower/posh-gulp.git"
+  },
   "author": "Trevor Power",
   "license": "ISC",
   "dependencies": {
