@@ -42,3 +42,10 @@ Finished 'posh:simple'
 Starting 'default'...
 Finished 'default'
 ```
+
+Development
+===========
+Run powershell tests with pester (choco install):
+```
+Invoke-Pester
+```
