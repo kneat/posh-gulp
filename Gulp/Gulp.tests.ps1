@@ -19,17 +19,17 @@ Describe "Publish-Tasks" {
     Context "Three task with no deps or action" {
         Import-Module $moduleLocation -force           
         Add-Task "one"
-        Add-Task "two"
+        Add-Task "two" @()
         Add-Task "three"
         $result = Publish-Tasks @()
-        It "should contain ""one"":null" {
-            $result | Should BeLike  "*""one"":null*"
+        It "should contain ""one"":[]" {
+            $result | Should BeLike  "*""one"":``[``]*"
         }       
-        It "should contain ""two"":null" {
-            $result | Should BeLike  "*""two"":null*"
+        It "should contain ""two"":[]" {
+            $result | Should BeLike  "*""two"":``[``]*"
         }       
-        It "should contain ""three"":null" {
-            $result | Should BeLike  "*""three"":null*"
+        It "should contain ""three"":[]" {
+            $result | Should BeLike  "*""three"":``[``]*"
         }       
     }
 }

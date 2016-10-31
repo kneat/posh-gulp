@@ -8,7 +8,7 @@ function Add-Task {
         [string]
         $name,
         [string[]]
-        $deps,
+        $deps = @(),
         [ScriptBlock]
         $action
     )
