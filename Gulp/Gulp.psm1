@@ -1,5 +1,5 @@
 $script:taskDeps = @{}
-$script:taskBlocks = @{}
+$script:taskBlocks = New-Object -TypeName PSObject
 
 function Add-Task {
     [CmdletBinding()]
@@ -10,11 +10,15 @@ function Add-Task {
         [string[]]
         $deps = @(),
         [ScriptBlock]
-        $action
+        $action = {}
     )
     process {
         $script:taskDeps[$name] = $deps        
-        $script:taskBlocks[$name] = $action
+        $script:taskBlocks |
+            Add-Member `
+                -MemberType ScriptMethod `
+                -Name $name `
+                -Value $action
     }
 }
 
@@ -23,8 +27,7 @@ function Export-Tasks(){
 }
 
 function Invoke-Task($name){
-    $task = [ScriptBlock]::Create($script:taskBlocks[$name])
-    Invoke-Command $task
+    $script:taskBlocks.$name()
 }
 
 function Publish-Tasks{
@@ -32,12 +35,11 @@ function Publish-Tasks{
     param(
         [Parameter(Mandatory=$true)]
         [AllowEmptyCollection()]
-        [string[]]
-        $execute
+        [string[]] $execute
     )
     process {
         if ($execute) {
-            Invoke-Task $execute
+            Invoke-Task $execute[0]
         } else {
             Export-Tasks        
         }
