@@ -47,9 +47,18 @@ function Publish-Tasks{
 } 
 
 function Write-Gulp {
+    param(  
+    [Parameter(
+        Position=0, 
+        Mandatory=$true, 
+        ValueFromPipeline=$true,
+        ValueFromPipelineByPropertyName=$true)
+    ]
+    [String[]]$Entries
+    ) 
     process {
-        foreach ($i in $input) {
-            $i
+        foreach ($entry in $Entries) {
+            $entry
         }
     }
 }
