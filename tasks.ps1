@@ -1,4 +1,5 @@
 Import-Module ./Gulp
+Import-Module ./Logger
 
 Add-Task "posh:empty"
 

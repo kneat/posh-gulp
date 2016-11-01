@@ -1,20 +1,34 @@
 $moduleLocation = "$PSScriptRoot\..\Logger"
 Remove-Module Logger           
 
+function catchHost($expression){
+    $line = {@()}.invoke()
+    $($expression.invoke() > $null) 6>&1 | %{
+        $line.Add($_.ToString())
+        if (!$_.MessageData.NoNewLine){
+            Write-Output ($line -join '')
+            $line.Clear()
+        }    
+    }
+}
+
 Describe "Write-Gulp" {
+    Import-Module $moduleLocation -force           
     Context "Write-Gulp hello world" {
-        Import-Module $moduleLocation -force           
-        $result = Write-Gulp "hello world"
+        $result = catchHost{
+            Write-Gulp "hello world"
+        }
         It "should have one output object" {
             $result.Count | Should Be 1
         }       
-        It "should have output of '[...] hello world'" {
+        It "should have output of '[??:??:??] hello world'" {
             $result | Should BeLike "``[??:??:??``] hello world"
         }
     }
     Context "hello world | Write-Gulp" {
-        Import-Module $moduleLocation -force           
-        $result = "hello world" | Write-Gulp
+        $result = catchHost{
+            "hello world" | Write-Gulp
+        }
         It "should have one output object" {
             $result.Count | Should Be 1
         }       
@@ -23,8 +37,9 @@ Describe "Write-Gulp" {
         }       
     }
     Context "hello, world | Write-Gulp" {
-        Import-Module $moduleLocation -force           
-        $result = "hello",  "world" | Write-Gulp
+        $result = catchHost{
+            "hello", "world" | Write-Gulp
+        }
         It "should have 2 output objects" {
             $result.Count | Should Be 2
         }       

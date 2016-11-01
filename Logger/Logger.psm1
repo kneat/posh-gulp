@@ -1,16 +1,19 @@
 function Write-Gulp {
+    [CmdletBinding()]
     param(  
-    [Parameter(
-        Position=0, 
-        Mandatory=$true, 
-        ValueFromPipeline=$true,
-        ValueFromPipelineByPropertyName=$true)
-    ]
-    [String[]]$Entries
+        [Parameter(
+            Position=0, 
+            Mandatory=$true, 
+            ValueFromPipeline=$true,
+            ValueFromPipelineByPropertyName=$true)
+        ]
+        [String[]]$Entries
     ) 
     process {
         foreach ($entry in $Entries) {
-            "[$((date).ToString("HH:mm:ss"))] $entry"
+            Write-Host "[" -nonewline
+            Write-Host (date).ToString("HH:mm:ss") -foregroundcolor "DarkGray" -nonewline
+            Write-Host "] $entry"
         }
     }
 }

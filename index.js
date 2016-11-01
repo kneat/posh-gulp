@@ -25,8 +25,7 @@ module.exports = function (file) {
       Object.keys(tasks).forEach(function(key) {
          let cb = (cb) => {         
             var execSwitches = switches.concat(file, key);
-            var taskProcess = spawn('powershell', execSwitches);
-            taskProcess.stdout.pipe(process.stdout);
+            var taskProcess = spawn('powershell', execSwitches, {stdio: 'inherit'});
             taskProcess.on('close', () => cb());
          }
          gulp.task(key, tasks[key], cb);
