@@ -1,9 +1,10 @@
+'use strict';
+
 const run = require('child_process').spawnSync;
 const spawn = require('child_process').spawn;
 const split = require('split');
 const parseString = require('xml2js').parseString;
 const gulp = require('gulp');
-
 
 const switches = [
    '-NoProfile',
