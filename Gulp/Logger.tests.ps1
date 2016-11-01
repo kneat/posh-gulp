@@ -8,9 +8,9 @@ Describe "Write-Gulp" {
         It "should have one output object" {
             $result.Count | Should Be 1
         }       
-        It "should have output of *hello world" {
-            $result | Should BeLike "*hello world"
-        }       
+        It "should have output of '[...] hello world'" {
+            $result | Should BeLike "``[??:??:??``] hello world"
+        }
     }
     Context "hello world | Write-Gulp" {
         Import-Module $moduleLocation -force           

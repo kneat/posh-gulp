@@ -58,7 +58,7 @@ function Write-Gulp {
     ) 
     process {
         foreach ($entry in $Entries) {
-            $entry
+            "[$((date).ToString("HH:mm:ss"))] $entry"
         }
     }
 }
