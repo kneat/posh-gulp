@@ -46,4 +46,12 @@ function Publish-Tasks{
     }
 } 
 
-Export-ModuleMember -Function Add-Task, Publish-Tasks
+function Write-Gulp {
+    process {
+        foreach ($i in $input) {
+            $i
+        }
+    }
+}
+
+Export-ModuleMember -Function Add-Task, Publish-Tasks, Write-Gulp
