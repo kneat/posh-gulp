@@ -1,5 +1,5 @@
-$moduleLocation = "$PSScriptRoot\..\Gulp"
-Remove-Module Gulp           
+$moduleLocation = "$PSScriptRoot\..\Logger"
+Remove-Module Logger           
 
 Describe "Write-Gulp" {
     Context "Write-Gulp hello world" {
