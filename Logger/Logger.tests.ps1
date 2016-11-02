@@ -50,4 +50,12 @@ Describe "Write-Gulp" {
             $result[1] | Should BeLike "*world"
         }       
     }
+    Context "hello world | Write-Gulp -name 'test:task' " {
+        $result = catchHost{
+            "hello world" | Write-Gulp -name 'test:task'
+        }
+        It "first line like ``[??:??:??``] test:task hello world" {
+            $result | Should BeLike "``[??:??:??``] test:task hello world"
+        }       
+    }    
 }
