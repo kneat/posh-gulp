@@ -8,15 +8,15 @@ function Write-Gulp {
             ValueFromPipelineByPropertyName=$true)
         ]
         [String[]]$Entries,
-        [string]$name
+        [switch]$IncludeName
     ) 
     process {
         foreach ($entry in $Entries) {
             Write-Host "[" -nonewline
             Write-Host (date).ToString("HH:mm:ss") -foregroundcolor "DarkGray" -nonewline
             Write-Host "] " -nonewline
-            if ($name) {
-                Write-Host "$name " -nonewline
+            if ($IncludeName) {
+                Write-Host "$(Get-Task) " -nonewline
             }
             Write-Host $entry
         }

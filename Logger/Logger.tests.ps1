@@ -50,9 +50,15 @@ Describe "Write-Gulp" {
             $result[1] | Should BeLike "*world"
         }       
     }
-    Context "hello world | Write-Gulp -name 'test:task' " {
-        $result = catchHost{
-            "hello world" | Write-Gulp -name 'test:task'
+    Context "inside running task 'my:task'" {
+        Import-Module $gulpLocation -force           
+        Add-Task 'my:task' @() {
+            $result = catchHost{
+                "message" | Write-Gulp -IncludeName
+            }
+            It "should be '[*] my:task mssage'" {
+             $result | Should BeLike "``[*``] my:task message"
+            }
         }
         It "first line like ``[??:??:??``] test:task hello world" {
             $result | Should BeLike "``[??:??:??``] test:task hello world"
