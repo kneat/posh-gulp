@@ -1,24 +1,35 @@
 $moduleLocation = "$PSScriptRoot\..\Gulp"
-Remove-Module Gulp           
 
 Describe "Publish-Tasks" {
+
+    BeforeEach {
+        Import-Module $moduleLocation -force
+    }
+
+    AfterEach {
+        Remove-Module Gulp
+    }
+
     Context "No Tasks" {
-        Import-Module $moduleLocation -force           
-        $result = Publish-Tasks @()
+        BeforeEach {
+            $result = Publish-Tasks @()
+        }
         It "should have output of {}" {
             $result | Should Be "{}"
         }       
     }
     Context "Simple task outputs 'test output'" {
-        Import-Module $moduleLocation -force           
-        Add-Task 'simple' @() {"test output"}
+        BeforeEach {
+            Add-Task 'simple' @() {"test output"}
+        }
         It "named on publish should output 'test output'" {
             Publish-Tasks 'simple' | Should Be "test output"
         }       
     }
     Context "One task with empty deps and no action" {
-        Import-Module $moduleLocation -force           
-        Add-Task 'empty' @()
+        BeforeEach {
+            Add-Task 'empty' @()
+        }
         It "published should be {""empty"":[]]}" {
             Publish-Tasks @() | Should Be "{""empty"":[]}"
         }       
@@ -27,25 +38,26 @@ Describe "Publish-Tasks" {
         }       
     }
     Context "Three task with no deps or action" {
-        Import-Module $moduleLocation -force           
-        Add-Task "one"
-        Add-Task "two" @() {}
-        Add-Task "three" -action {}
-        $result = Publish-Tasks @()
+        BeforeEach {
+            Add-Task "one"
+            Add-Task "two" @() {}
+            Add-Task "three" -action {}
+        }
         It "should contain ""one"":[]" {
-            $result | Should BeLike  "*""one"":``[``]*"
+            Publish-Tasks @() | Should BeLike  "*""one"":``[``]*"
         }       
         It "should contain ""two"":[]" {
-            $result | Should BeLike  "*""two"":``[``]*"
+            Publish-Tasks @() | Should BeLike  "*""two"":``[``]*"
         }       
         It "should contain ""three"":[]" {
-            $result | Should BeLike  "*""three"":``[``]*"
+            Publish-Tasks @() | Should BeLike  "*""three"":``[``]*"
         }       
     }
     Context "`$PSScriptRoot should not be empty" {
-        Import-Module $moduleLocation -force           
-        Add-Task 'root' @() {
-            $PSScriptRoot
+        BeforeEach {
+            Add-Task 'root' @() {
+                $PSScriptRoot
+            }
         }
         It "task run" {
             Publish-Tasks @('root') | Should BeLike "*\Gulp"
@@ -54,28 +66,36 @@ Describe "Publish-Tasks" {
 }
 
 Describe "Get-Task" {
-   Context "Get-Task not during task execution" {
-        Import-Module $moduleLocation -force           
+    BeforeEach {
+        Import-Module "$PSScriptRoot\..\Gulp"
+    }
+
+    AfterEach {
+        Remove-Module Gulp
+    }
+ 
+    Context "Get-Task not during task execution" {
         It "should return null" {
             Get-Task | Should Be $null
         }       
     } 
     Context "inside running task 'my:task'" {
-        Import-Module $moduleLocation -force           
-        Add-Task 'my:task' @() {
-            It "should return" {
-                Get-Task | Should Be "my:task"
-            }       
+        BeforeEach {
+            Add-Task 'my:task' @() {
+                Get-Task
+            }
         }
-        Publish-Tasks @('my:task')
+        It "should return" {
+            Publish-Tasks @('my:task') | Should Be "my:task"
+        }       
     }
     Context "after running task 'my:task'" {
-        Import-Module $moduleLocation -force           
-        Add-Task 'my:task' @() {
+        BeforeEach {
+            Add-Task 'my:task' @() {}
         }
-        Publish-Tasks @('my:task')
         It "should return null" {
+            Publish-Tasks @('my:task')
             Get-Task | Should Be $null
-        }       
+        }  
     } 
 }
