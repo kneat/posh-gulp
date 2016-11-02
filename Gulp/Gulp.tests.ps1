@@ -51,5 +51,31 @@ Describe "Publish-Tasks" {
             Publish-Tasks @('root') | Should BeLike "*\Gulp"
         }       
     }
+}
 
+Describe "Get-Task" {
+   Context "Get-Task not during task execution" {
+        Import-Module $moduleLocation -force           
+        It "should return null" {
+            Get-Task | Should Be $null
+        }       
+    } 
+    Context "inside running task 'my:task'" {
+        Import-Module $moduleLocation -force           
+        Add-Task 'my:task' @() {
+            It "should return" {
+                Get-Task | Should Be "my:task"
+            }       
+        }
+        Publish-Tasks @('my:task')
+    }
+    Context "after running task 'my:task'" {
+        Import-Module $moduleLocation -force           
+        Add-Task 'my:task' @() {
+        }
+        Publish-Tasks @('my:task')
+        It "should return null" {
+            Get-Task | Should Be $null
+        }       
+    } 
 }
