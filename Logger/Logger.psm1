@@ -16,7 +16,7 @@ function Write-Gulp {
             Write-Host (date).ToString("HH:mm:ss") -foregroundcolor "DarkGray" -nonewline
             Write-Host "] " -nonewline
             if ($IncludeName) {
-                Write-Host "$(Get-Task) " -nonewline
+                Write-Host "$(Get-Task) " -foregroundcolor "DarkCyan" -nonewline
             }
             Write-Host $entry
         }
