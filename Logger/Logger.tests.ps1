@@ -1,5 +1,6 @@
-$moduleLocation = "$PSScriptRoot\..\Logger"
-Remove-Module Logger           
+$loggerLocation = "$PSScriptRoot\..\Logger"
+$gulpLocation = "$PSScriptRoot\..\Gulp"
+Import-Module $loggerLocation -force           
 
 function catchHost($expression){
     $line = {@()}.invoke()
@@ -13,7 +14,6 @@ function catchHost($expression){
 }
 
 Describe "Write-Gulp" {
-    Import-Module $moduleLocation -force           
     Context "Write-Gulp hello world" {
         $result = catchHost{
             Write-Gulp "hello world"
@@ -50,4 +50,19 @@ Describe "Write-Gulp" {
             $result[1] | Should BeLike "*world"
         }       
     }
+    Context "inside running task 'my:task'" {
+        Import-Module $gulpLocation -force           
+        Add-Task 'my:task' @() {
+            $result = catchHost{
+                "message" | Write-Gulp -IncludeName
+            }
+            It "should be '[*] my:task mssage'" {
+             $result | Should BeLike "``[*``] my:task message"
+            }
+        }
+        Publish-Tasks @('my:task')
+        Remove-Module Gulp
+    }   
 }
+
+Remove-Module Logger
