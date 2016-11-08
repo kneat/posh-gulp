@@ -65,6 +65,27 @@ Describe "Publish-Tasks" {
     }
 }
 
+Describe "Publish-Tasks errors" {
+    BeforeEach {
+        Import-Module "$PSScriptRoot\..\Gulp"
+
+        Add-Task "errors" @() {
+            Write-Error "fail"
+        }
+    }
+
+    AfterEach {
+        Remove-Module Gulp
+    }
+
+    Context "Get-Task not during task execution" {
+        It "error stream should contain fail" {
+            $(Publish-Tasks "errors" > $null) 2>&1 |
+                Should BeLike "*fail*"
+        }       
+    } 
+}
+
 Describe "Get-Task" {
     BeforeEach {
         Import-Module "$PSScriptRoot\..\Gulp"

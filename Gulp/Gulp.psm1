@@ -18,7 +18,8 @@ function Add-Task {
             Add-Member `
                 -MemberType ScriptMethod `
                 -Name $name `
-                -Value $action
+                -Value $action `
+                -Force
     }
 }
 
@@ -32,7 +33,7 @@ function Export-Tasks(){
 
 function Invoke-Task($name){
     $currentTask = $name
-    $script:taskBlocks.$name()
+    Invoke-Command $script:taskBlocks.$name.Script
     $currentTask = $name
 }
 
