@@ -18,7 +18,8 @@ function Add-Task {
             Add-Member `
                 -MemberType ScriptMethod `
                 -Name $name `
-                -Value $action
+                -Value $action `
+                -Force
     }
 }
 
