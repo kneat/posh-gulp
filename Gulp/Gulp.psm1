@@ -33,7 +33,7 @@ function Export-Tasks(){
 
 function Invoke-Task($name){
     $currentTask = $name
-    $script:taskBlocks.$name()
+    Invoke-Command $script:taskBlocks.$name.Script
     $currentTask = $name
 }
 
