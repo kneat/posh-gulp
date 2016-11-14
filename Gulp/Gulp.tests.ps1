@@ -1,9 +1,7 @@
-$moduleLocation = "$PSScriptRoot\..\Gulp"
-
 Describe "Publish-Tasks" {
 
     BeforeEach {
-        Import-Module $moduleLocation -force
+        Import-Module "$PSScriptRoot\..\Gulp" -force
     }
 
     AfterEach {
