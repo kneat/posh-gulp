@@ -47,30 +47,6 @@ Starting 'default'...
 Finished 'default'
 ```
 
-Logging
--------
-A utility module is also available to clean up logging.
-
-### `Write-Gulp`
-Replace `Write-Host` with `Write-Gulp` to get time stamped output similar to
-`gulp-utils` log function.
-
-```ps
-Import-Module ./path-to-posh-gulp/Logger
-
-Add-Task "logging" @() {
-    'simple powershell task' | Write-Gulp 
-    Write-Gulp 'some more output prefixed with task'
-}
-```
-
-```
-[23:17:08] Starting 'loggging'...
-[23:17:09] some output
-[23:17:09] logging some more output prefixed with task
-[23:17:09] Finished 'loggging' after 723 ms
-```
-
 Development
 ===========
 Run powershell tests with pester (choco install):
