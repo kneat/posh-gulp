@@ -60,7 +60,7 @@ Import-Module ./path-to-posh-gulp/Logger
 
 Add-Task "logging" @() {
     'simple powershell task' | Write-Gulp 
-    Write-Gulp -IncludeName 'some more output prefixed with task'
+    Write-Gulp 'some more output prefixed with task'
 }
 ```
 

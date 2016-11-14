@@ -4,7 +4,7 @@ Import-Module ./Logger
 Add-Task "posh:empty"
 
 Add-Task "posh:simple" ("build", "posh:empty") {
-    Write-Gulp -IncludeName 'simple powershell task'
+    Write-Gulp 'simple powershell task'
 }
 
 Publish-Tasks $args

@@ -76,45 +76,10 @@ Describe "Publish-Tasks errors" {
         Remove-Module Gulp
     }
 
-    Context "Get-Task not during task execution" {
+    Context "Error during task execution" {
         It "error stream should contain fail" {
             $(Publish-Tasks "errors" > $null) 2>&1 |
                 Should BeLike "*fail*"
         }       
-    } 
-}
-
-Describe "Get-Task" {
-    BeforeEach {
-        Import-Module "$PSScriptRoot\..\Gulp"
-    }
-
-    AfterEach {
-        Remove-Module Gulp
-    }
- 
-    Context "Get-Task not during task execution" {
-        It "should return null" {
-            Get-Task | Should Be $null
-        }       
-    } 
-    Context "inside running task 'my:task'" {
-        BeforeEach {
-            Add-Task 'my:task' @() {
-                Get-Task
-            }
-        }
-        It "should return" {
-            Publish-Tasks @('my:task') | Should Be "my:task"
-        }       
-    }
-    Context "after running task 'my:task'" {
-        BeforeEach {
-            Add-Task 'my:task' @() {}
-        }
-        It "should return null" {
-            Publish-Tasks @('my:task')
-            Get-Task | Should Be $null
-        }  
     } 
 }
