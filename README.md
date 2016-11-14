@@ -3,7 +3,8 @@ Ever wanted to implement your gulp task direclty with powershell?
 Tasks
 -----
 ### `gulpfile.js`
-```
+
+```js
 const gulp = require('gulp');
 const pulp = require('posh-gulp');
 
@@ -18,7 +19,8 @@ gulp.task('default', ['posh:simple']);
 ```
 
 ### `gulpfile.ps1`
-```
+
+```powershell
 Import-Module ./path-to-posh-gulp/Gulp
 
 Add-Task "posh:empty"
@@ -72,6 +74,6 @@ Add-Task "logging" @() {
 Development
 ===========
 Run powershell tests with pester (choco install):
-```
+```powershell
 Invoke-Pester
 ```
