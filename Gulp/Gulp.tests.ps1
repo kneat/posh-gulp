@@ -1,4 +1,4 @@
-Describe "Publish-Tasks" {
+Describe "Publish-Tasks @()" {
 
     BeforeEach {
         Import-Module "$PSScriptRoot\..\Gulp" -force
@@ -8,7 +8,7 @@ Describe "Publish-Tasks" {
         Remove-Module Gulp
     }
 
-    Context "No Tasks" {
+    Context "No Tasks added" {
         BeforeEach {
             $result = Publish-Tasks @()
         }
@@ -16,70 +16,91 @@ Describe "Publish-Tasks" {
             $result | Should Be "{}"
         }       
     }
-    Context "Simple task outputs 'test output'" {
-        BeforeEach {
-            Add-Task 'simple' @() {"test output"}
-        }
-        It "named on publish should output 'test output'" {
-            Publish-Tasks 'simple' | Should Be "test output"
-        }       
-    }
+
     Context "One task with empty deps and no action" {
         BeforeEach {
             Add-Task 'empty' @()
+            $result = Publish-Tasks @()
         }
         It "published should be {""empty"":[]]}" {
-            Publish-Tasks @() | Should Be "{""empty"":[]}"
-        }       
-        It "Publish-Tasks 'empty' have no output" {
-            Publish-Tasks @('empty') | Should BeLike ""
+            $result | Should Be "{""empty"":[]}"
         }       
     }
+
     Context "Three task with no deps or action" {
         BeforeEach {
             Add-Task "one"
             Add-Task "two" @() {}
             Add-Task "three" -action {}
+            $result = Publish-Tasks @()
         }
-        It "should contain ""one"":[]" {
-            Publish-Tasks @() | Should BeLike  "*""one"":``[``]*"
-        }       
-        It "should contain ""two"":[]" {
-            Publish-Tasks @() | Should BeLike  "*""two"":``[``]*"
-        }       
-        It "should contain ""three"":[]" {
-            Publish-Tasks @() | Should BeLike  "*""three"":``[``]*"
-        }       
-    }
-    Context "`$PSScriptRoot should not be empty" {
-        BeforeEach {
-            Add-Task 'root' @() {
-                $PSScriptRoot
-            }
-        }
-        It "task run" {
-            Publish-Tasks @('root') | Should BeLike "*\Gulp"
+        It 'result should be {"one":[],"three":[],"two":[]}' {
+            $result | Should Be  '{"one":[],"three":[],"two":[]}'
         }       
     }
 }
 
-Describe "Publish-Tasks errors" {
-    BeforeEach {
-        Import-Module "$PSScriptRoot\..\Gulp"
+Describe "Publish-Tasks 'name'" {
 
-        Add-Task "errors" @() {
-            Write-Error "fail"
-        }
+    BeforeEach {
+        Import-Module "$PSScriptRoot\..\Gulp" -force
     }
 
     AfterEach {
         Remove-Module Gulp
     }
 
-    Context "Error during task execution" {
-        It "error stream should contain fail" {
-            $(Publish-Tasks "errors" > $null) 2>&1 |
-                Should BeLike "*fail*"
+    Context "'name' outputs 'test output'" {
+        BeforeEach {
+            Add-Task 'name' @() {"test output"}
+            $result = Publish-Tasks 'name'
+        }
+        It "named on publish should output 'test output'" {
+            $result | Should Be "test output"
         }       
-    } 
+    }
+    Context "'name' is empty task" {
+        BeforeEach {
+            Add-Task 'name' @()
+            $result = Publish-Tasks 'name'
+        }
+        It "should have no output" {
+            $result | Should BeLike ""
+        }       
+    }
+    Context "'name' prints `$PSScriptRoot" {
+        BeforeEach {
+            Add-Task 'name' @() {
+                $PSScriptRoot
+            }
+            $result = Publish-Tasks 'name'
+        }
+        It "result should be like *\Gulp" {
+            $result | Should BeLike "*\Gulp"
+        }       
+    }
+    Context "'name' writes 'fail' error" {
+        BeforeEach {
+            Add-Task "name" @() {
+                Write-Error 'fail'
+            }
+            $warnings = $((
+                $errors = $((
+                    $result = Publish-Tasks "name"
+                ) > $null) 2>&1
+            ) > $null) 3>&1
+        }
+        It "result should be null" {
+            $result |
+                Should Be $null
+        }       
+        It "error stream should be fail" {
+            $errors |
+                Should Be "fail"
+        }       
+        It "warning stream should be null" {
+            $warnings |
+                Should Be $null
+        }       
+    }
 }
