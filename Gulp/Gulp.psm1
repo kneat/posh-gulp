@@ -23,18 +23,12 @@ function Add-Task {
     }
 }
 
-function Get-Task() {
-    $currentTask
-}
-
 function Export-Tasks(){
     $script:taskDeps | ConvertTo-Json -Compress   
 }
 
 function Invoke-Task($name){
-    $currentTask = $name
     Invoke-Command $script:taskBlocks.$name.Script
-    $currentTask = $name
 }
 
 function Publish-Tasks{
@@ -53,4 +47,4 @@ function Publish-Tasks{
     }
 } 
 
-Export-ModuleMember -Function Add-Task, Get-Task, Publish-Tasks
+Export-ModuleMember -Function Add-Task, Publish-Tasks

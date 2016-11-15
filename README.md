@@ -3,7 +3,8 @@ Ever wanted to implement your gulp task direclty with powershell?
 Tasks
 -----
 ### `gulpfile.js`
-```
+
+```js
 const gulp = require('gulp');
 const pulp = require('posh-gulp');
 
@@ -18,7 +19,8 @@ gulp.task('default', ['posh:simple']);
 ```
 
 ### `gulpfile.ps1`
-```
+
+```powershell
 Import-Module ./path-to-posh-gulp/Gulp
 
 Add-Task "posh:empty"
@@ -45,33 +47,9 @@ Starting 'default'...
 Finished 'default'
 ```
 
-Logging
--------
-A utility module is also available to clean up logging.
-
-### `Write-Gulp`
-Replace `Write-Host` with `Write-Gulp` to get time stamped output similar to
-`gulp-utils` log function.
-
-```ps
-Import-Module ./path-to-posh-gulp/Logger
-
-Add-Task "logging" @() {
-    'simple powershell task' | Write-Gulp 
-    Write-Gulp -IncludeName 'some more output prefixed with task'
-}
-```
-
-```
-[23:17:08] Starting 'loggging'...
-[23:17:09] some output
-[23:17:09] logging some more output prefixed with task
-[23:17:09] Finished 'loggging' after 723 ms
-```
-
 Development
 ===========
 Run powershell tests with pester (choco install):
-```
+```powershell
 Invoke-Pester
 ```
