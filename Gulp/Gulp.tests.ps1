@@ -14,7 +14,7 @@ Describe "Publish-Tasks @()" {
         }
         It "should have output of {}" {
             $result | Should Be "{}"
-        }       
+        }
     }
 
     Context "One task with empty deps and no action" {
@@ -24,7 +24,7 @@ Describe "Publish-Tasks @()" {
         }
         It "published should be {""empty"":[]]}" {
             $result | Should Be "{""empty"":[]}"
-        }       
+        }
     }
 
     Context "Three task with no deps or action" {
@@ -36,7 +36,7 @@ Describe "Publish-Tasks @()" {
         }
         It 'result should be {"one":[],"three":[],"two":[]}' {
             $result | Should Be  '{"one":[],"three":[],"two":[]}'
-        }       
+        }
     }
 }
 
@@ -57,7 +57,7 @@ Describe "Publish-Tasks 'name'" {
         }
         It "named on publish should output 'test output'" {
             $result | Should Be "test output"
-        }       
+        }
     }
     Context "'name' is empty task" {
         BeforeEach {
@@ -66,7 +66,7 @@ Describe "Publish-Tasks 'name'" {
         }
         It "should have no output" {
             $result | Should BeLike ""
-        }       
+        }
     }
     Context "'name' prints `$PSScriptRoot" {
         BeforeEach {
@@ -77,7 +77,7 @@ Describe "Publish-Tasks 'name'" {
         }
         It "result should be like *\Gulp" {
             $result | Should BeLike "*\Gulp"
-        }       
+        }
     }
     Context "'name' writes 'fail' error" {
         BeforeEach {
@@ -93,14 +93,14 @@ Describe "Publish-Tasks 'name'" {
         It "result should be null" {
             $result |
                 Should Be $null
-        }       
+        }
         It "error stream should be fail" {
             $errors |
                 Should Be "fail"
-        }       
+        }
         It "warning stream should be null" {
             $warnings |
                 Should Be $null
-        }       
+        }
     }
 }
