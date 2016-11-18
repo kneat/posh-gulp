@@ -13,7 +13,7 @@ function Add-Task {
         $action = {}
     )
     process {
-        $script:taskDeps[$name] = $deps        
+        $script:taskDeps[$name] = $deps
         $script:taskBlocks |
             Add-Member `
                 -MemberType ScriptMethod `
@@ -24,7 +24,7 @@ function Add-Task {
 }
 
 function Export-Tasks(){
-    $script:taskDeps | ConvertTo-Json -Compress   
+    $script:taskDeps | ConvertTo-Json -Compress
 }
 
 function Invoke-Task($name){
@@ -42,9 +42,9 @@ function Publish-Tasks{
         if ($execute) {
             Invoke-Task $execute[0]
         } else {
-            Export-Tasks        
+            Export-Tasks
         }
     }
-} 
+}
 
 Export-ModuleMember -Function Add-Task, Publish-Tasks

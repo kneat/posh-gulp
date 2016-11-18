@@ -21,11 +21,12 @@ function readTasks(file, cb) {
 module.exports = function (file) {
    readTasks(file, function(tasks){
       Object.keys(tasks).forEach(function(key) {
-         let cb = (cb) => {         
-            var execSwitches = switches.concat(file, key);
-            var taskProcess = spawn('powershell', execSwitches, {stdio: 'inherit'});
+         const cb = (cb) => {
+            const execSwitches = switches.concat(file, key);
+            const taskProcess = spawn('powershell', execSwitches, {stdio: 'inherit'});
+
             taskProcess.on('close', () => cb());
-         }
+         };
          gulp.task(key, tasks[key], cb);
       });
    });
