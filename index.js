@@ -19,7 +19,7 @@ module.exports = function (file) {
          const execSwitches = switches.concat(file, key);
          const taskProcess = spawn('powershell', execSwitches, {stdio: ['inherit', 'pipe']});
 
-         taskProcess.stdout.on('data', (data) => console.log(data.toString().trim()));
+         taskProcess.stdout.on('data', (data) => console.log(JSON.parse(data.toString())));
 
          taskProcess.on('close', () => cb());
       };

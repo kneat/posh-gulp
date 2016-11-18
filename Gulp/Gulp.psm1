@@ -38,6 +38,8 @@ function Invoke-Task($name){
             "ErrorRecord" { "$record"  }
             default {"unknown: $_"}
         }
+    } | %{
+        ConvertTo-Json $_
     }
 }
 

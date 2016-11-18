@@ -56,7 +56,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "named on publish should output 'test output'" {
-            $result | Should Be "test output"
+            $result | Should Be """test output"""
         }
     }
     Context "'name' is empty task" {
@@ -75,8 +75,8 @@ Describe "Publish-Tasks 'name'" {
             }
             $result = Publish-Tasks 'name'
         }
-        It "result should be like *\Gulp" {
-            $result | Should BeLike "*\Gulp"
+        It "result should be like ""*\Gulp""" {
+            $result | Should BeLike """*\Gulp"""
         }
     }
     Context "'name' writes 'fail' error" {
@@ -91,7 +91,7 @@ Describe "Publish-Tasks 'name'" {
             ) > $null) 3>&1
         }
         It "result should be 'fail'" {
-            $result | Should Be 'fail'
+            $result | Should Be """fail"""
         }
         It "error stream should be null" {
             $errors | Should Be $null
@@ -111,8 +111,8 @@ Describe "Publish-Tasks 'name'" {
                 ) > $null) 2>&1
             ) > $null) 3>&1
         }
-        It "result should be 'careful!'" {
-            $result | Should Be 'careful!'
+        It 'result should be "careful!"' {
+            $result | Should Be """careful!"""
         }
         It "error stream should be null" {
             $errors | Should Be $null
