@@ -26,6 +26,9 @@ Describe "Publish-Tasks @()" {
         It "eight line is 'simple write-verbose'" {
             $result[7] | Should Be "simple write-verbose"
         }
+        It "ninth line is 'simple write-debug'" {
+            $result[8] | Should Be "simple write-debug"
+        }
     }
 
 }

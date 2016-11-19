@@ -29,8 +29,10 @@ function Export-Tasks(){
 
 function Invoke-Task($name){
     $originalVerbosePreference = $global:VerbosePreference
+    $originalDebugPreference = $global:DebugPreference
     try {
         $global:VerbosePreference = "Continue"
+        $global:DebugPreference = "Continue"
         $(Invoke-Command -Verbose $script:taskBlocks.$name.Script) *>&1 | %{
             $record = $_
             switch ($record.GetType().Name)
@@ -40,6 +42,7 @@ function Invoke-Task($name){
                 "WarningRecord" { "$record" }
                 "ErrorRecord" { "$record"  }
                 "VerboseRecord" { "$record"  }
+                "DebugRecord" { "$record"  }
                 default {"unknown: $_"}
             }
         } | %{
@@ -47,6 +50,7 @@ function Invoke-Task($name){
         }
     } finally {
         $global:VerbosePreference = $originalVerbosePreference
+        $global:DebugPreference = $originalDebugPreference
     }
 }
 
