@@ -1,6 +1,6 @@
-Describe "Publish-Tasks @()" {
+Describe "Running tasks from gulp" {
 
-    Context "gulp posh:write:all" {
+    Context "Run 'posh:write:all'" {
         BeforeAll {
             pushd $PSScriptRoot
             $result = gulp posh:write:all
