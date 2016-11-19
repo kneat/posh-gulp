@@ -20,6 +20,9 @@ Describe "Publish-Tasks @()" {
         It "sixth line is 'simple write-warning'" {
             $result[5] | Should Be "simple write-warning"
         }
+        It "seventh line is 'simple write-information'" {
+            $result[6] | Should Be "simple write-information"
+        }
     }
 
 }
