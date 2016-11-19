@@ -6,6 +6,7 @@ Add-Task "posh:write:all" @() {
     Write-Error 'simple write-error'
     Write-Warning 'simple write-warning'
     Write-Information 'simple write-information'
+    Write-Verbose 'simple write-verbose'
 }
 
 Publish-Tasks $args

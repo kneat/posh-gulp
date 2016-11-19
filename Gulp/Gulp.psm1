@@ -28,18 +28,25 @@ function Export-Tasks(){
 }
 
 function Invoke-Task($name){
-    $(Invoke-Command $script:taskBlocks.$name.Script) *>&1 | %{
-        $record = $_
-        switch ($record.GetType().Name)
-        {
-            "InformationRecord" { "$record" }
-            "String" { "$record" }
-            "WarningRecord" { "$record" }
-            "ErrorRecord" { "$record"  }
-            default {"unknown: $_"}
+    $originalVerbosePreference = $global:VerbosePreference
+    try {
+        $global:VerbosePreference = "Continue"
+        $(Invoke-Command -Verbose $script:taskBlocks.$name.Script) *>&1 | %{
+            $record = $_
+            switch ($record.GetType().Name)
+            {
+                "InformationRecord" { "$record" }
+                "String" { "$record" }
+                "WarningRecord" { "$record" }
+                "ErrorRecord" { "$record"  }
+                "VerboseRecord" { "$record"  }
+                default {"unknown: $_"}
+            }
+        } | %{
+            ConvertTo-Json $_
         }
-    } | %{
-        ConvertTo-Json $_
+    } finally {
+        $global:VerbosePreference = $originalVerbosePreference
     }
 }
 
