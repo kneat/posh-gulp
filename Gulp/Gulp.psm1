@@ -28,7 +28,30 @@ function Export-Tasks(){
 }
 
 function Invoke-Task($name){
-    Invoke-Command $script:taskBlocks.$name.Script
+    $originalVerbosePreference = $global:VerbosePreference
+    $originalDebugPreference = $global:DebugPreference
+    try {
+        $global:VerbosePreference = "Continue"
+        $global:DebugPreference = "Continue"
+        $(Invoke-Command -Verbose $script:taskBlocks.$name.Script) *>&1 | %{
+            $record = $_
+            switch ($record.GetType().Name)
+            {
+                "InformationRecord" { "$record" }
+                "String" { "$record" }
+                "WarningRecord" { "$record" }
+                "ErrorRecord" { "$record"  }
+                "VerboseRecord" { "$record"  }
+                "DebugRecord" { "$record"  }
+                default {"unknown: $_"}
+            }
+        } | %{
+            ConvertTo-Json $_
+        }
+    } finally {
+        $global:VerbosePreference = $originalVerbosePreference
+        $global:DebugPreference = $originalDebugPreference
+    }
 }
 
 function Publish-Tasks{

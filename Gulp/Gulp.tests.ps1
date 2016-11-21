@@ -56,7 +56,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "named on publish should output 'test output'" {
-            $result | Should Be "test output"
+            $result | Should Be """test output"""
         }
     }
     Context "'name' is empty task" {
@@ -75,8 +75,8 @@ Describe "Publish-Tasks 'name'" {
             }
             $result = Publish-Tasks 'name'
         }
-        It "result should be like *\Gulp" {
-            $result | Should BeLike "*\Gulp"
+        It "result should be like ""*\Gulp""" {
+            $result | Should BeLike """*\Gulp"""
         }
     }
     Context "'name' writes 'fail' error" {
@@ -90,17 +90,35 @@ Describe "Publish-Tasks 'name'" {
                 ) > $null) 2>&1
             ) > $null) 3>&1
         }
-        It "result should be null" {
-            $result |
-                Should Be $null
+        It "result should be 'fail'" {
+            $result | Should Be """fail"""
         }
-        It "error stream should be fail" {
-            $errors |
-                Should Be "fail"
+        It "error stream should be null" {
+            $errors | Should Be $null
         }
         It "warning stream should be null" {
-            $warnings |
-                Should Be $null
+            $warnings | Should Be $null
+        }
+    }
+    Context "'name' writes 'careful!' warning" {
+        BeforeEach {
+            Add-Task "name" @() {
+                Write-Warning 'careful!'
+            }
+            $warnings = $((
+                $errors = $((
+                    $result = Publish-Tasks "name"
+                ) > $null) 2>&1
+            ) > $null) 3>&1
+        }
+        It 'result should be "careful!"' {
+            $result | Should Be """careful!"""
+        }
+        It "error stream should be null" {
+            $errors | Should Be $null
+        }
+        It "warning stream should be null" {
+            $warnings | Should Be $null
         }
     }
 }
