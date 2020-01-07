@@ -1,34 +1,31 @@
 Describe "Running tasks from gulp" {
 
-    Context "Run 'posh:write:all'" {
-        BeforeAll {
-            pushd $PSScriptRoot
-            $result = gulp posh:write:all
-        }
-        AfterAll {
-            popd
-        }
-        It "third line is 'simple write-host'" {
-            $result[2] | Should Be "simple write-host"
-        }
-        It "fourth line is 'simple write-output'" {
-            $result[3] | Should Be "simple write-output"
-        }
-        It "fifth line is 'simple write-error'" {
-            $result[4] | Should Be "simple write-error"
-        }
-        It "sixth line is 'simple write-warning'" {
-            $result[5] | Should Be "simple write-warning"
-        }
-        It "seventh line is 'simple write-information'" {
-            $result[6] | Should Be "simple write-information"
-        }
-        It "eight line is 'simple write-verbose'" {
-            $result[7] | Should Be "simple write-verbose"
-        }
-        It "ninth line is 'simple write-debug'" {
-            $result[8] | Should Be "simple write-debug"
-        }
-    }
+   Context "Run 'posh:write:all'" {
+      BeforeAll {
+         Push-Location $PSScriptRoot
+         $result = gulp posh:write:all
+      }
+      AfterAll {
+         Pop-Location
+      }
+
+      @(
+         "* Importing Tasks *"
+         "*"
+         "*"
+         "simple write-host"
+         "simple write-output"
+         "simple write-error"
+         "simple write-warning"
+         "simple write-information"
+         "simple write-verbose"
+         "simple write-debug"
+      ) | ForEach-Object { $i = 0 } {
+         It "line $i is like '$_'" {
+            $result[$i] | Should BeLike $_
+         }
+         $i++
+      }
+   }
 
 }

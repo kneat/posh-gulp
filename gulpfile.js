@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const pulp = require('./');
 
-pulp('./tasks.ps1');
+pulp(gulp, './tasks.ps1');
 
 gulp.task('build', (cb) => {
    console.log('building');
