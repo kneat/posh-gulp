@@ -27,7 +27,14 @@ module.exports = function (gulp, file) {
             const execSwitches = switches.concat(file, key);
             const taskProcess = spawn('powershell', execSwitches, { stdio: ['inherit', 'pipe'] });
 
-            taskProcess.stdout.on('data', (data) => console.log(JSON.parse(data.toString())));
+            taskProcess.stdout.on('data', data => {
+               data
+                  .toString()
+                  .split(/\r?\n/)
+                  .filter(l => l !== '')
+                  .map(l => JSON.parse(l))
+                  .forEach(l => console.log(l));
+            });
 
             taskProcess.on('close', () => cb());
          };
