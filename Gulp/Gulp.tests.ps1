@@ -56,7 +56,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "named on publish should output 'test output'" {
-            $result | Should Be """test output"""
+            $result | Should Match """test output"""
         }
     }
     Context "'name' is empty task" {
@@ -76,7 +76,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "result should be like ""*\Gulp""" {
-            $result | Should BeLike """*\Gulp"""
+            ($result | ConvertFrom-Json).Message | Should BeLike "*\Gulp"
         }
     }
     Context "'name' writes 'fail' error" {
@@ -91,7 +91,7 @@ Describe "Publish-Tasks 'name'" {
             ) > $null) 3>&1
         }
         It "result should be 'fail'" {
-            $result | Should Be """fail"""
+            $result | Should Match """fail"""
         }
         It "error stream should be null" {
             $errors | Should Be $null
@@ -111,8 +111,11 @@ Describe "Publish-Tasks 'name'" {
                 ) > $null) 2>&1
             ) > $null) 3>&1
         }
-        It 'result should be "careful!"' {
-            $result | Should Be """careful!"""
+        It 'result message should be "careful!"' {
+           ($result | ConvertFrom-Json).Message | Should Be "careful!"
+        }
+        It 'result level should be "warning"' {
+           ($result | ConvertFrom-Json).Level | Should Be "warning"
         }
         It "error stream should be null" {
             $errors | Should Be $null
