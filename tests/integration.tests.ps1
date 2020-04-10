@@ -3,7 +3,7 @@ Describe "Running tasks from gulp" {
    Context "Run 'posh:write:all'" {
       BeforeAll {
          Push-Location $PSScriptRoot
-         $result = gulp posh:write:all
+         $result = npx gulp posh:write:all
       }
       AfterAll {
          Pop-Location
