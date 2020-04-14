@@ -33,24 +33,31 @@ function Invoke-Task($name){
     try {
         $global:VerbosePreference = "Continue"
         $global:DebugPreference = "Continue"
-        $(Invoke-Command -Verbose $script:taskBlocks.$name.Script) *>&1 | %{
-            $record = $_
-            switch ($record.GetType().Name)
-            {
-                "InformationRecord" { "$record" }
-                "String" { "$record" }
-                "WarningRecord" { "$record" }
-                "ErrorRecord" { "$record"  }
-                "VerboseRecord" { "$record"  }
-                "DebugRecord" { "$record"  }
-                default {"unknown: $_"}
-            }
-        } | %{
-            ConvertTo-Json $_
-        }
+        $result = ((Invoke-Command -Verbose $script:taskBlocks.$name.Script) *>&1)
     } finally {
         $global:VerbosePreference = $originalVerbosePreference
         $global:DebugPreference = $originalDebugPreference
+    }
+         
+    $result | ForEach-Object {
+       $record = $_
+       switch ($record.GetType().Name)
+       {
+          "InformationRecord" { @{level = "information"; message = "$record".Trim()}  }
+          "String" { @{level = "unknown"; message = "$record".Trim()}  }
+          "WarningRecord" { @{level = "warning"; message = "$record".Trim()} }
+          "ErrorRecord" { @{level = "error"; message = "$record".Trim()}  }
+          "VerboseRecord" { @{level = "verbose"; message = "$record".Trim()}  }
+          "DebugRecord" { @{level = "debug"; message = "$record".Trim()}  }
+          default {
+             @{
+                level = "unknown"
+                message = ($record | Format-Table -HideTableHeaders -AutoSize -Wrap:$false | Out-String).Trim()
+             }
+          }
+       }
+    } | ForEach-Object {
+       ConvertTo-Json $_ -Compress
     }
 }
 
