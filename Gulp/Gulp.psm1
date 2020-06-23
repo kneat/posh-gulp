@@ -1,4 +1,4 @@
-$script:taskDeps = @{}
+$script:taskDeps = [ordered]@{}
 $script:taskBlocks = New-Object -TypeName PSObject
 
 function Add-Task {
