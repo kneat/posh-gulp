@@ -66,8 +66,7 @@ module.exports = function (gulp, file) {
 
          const dependencyTasks = tasks[key];
 
-         if (dependencyTasks.length) gulp.task(key, gulp.series(dependencyTasks), cb);
-         else gulp.task(key, cb);
+         gulp.task(key, gulp.series(dependencyTasks, cb));
       });
    }
 };
