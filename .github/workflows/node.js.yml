@@ -21,5 +21,5 @@ jobs:
     - name: pester
       uses: Amadevus/pwsh-script@v1.0.0
       with:
-        script: pester
+        script: Install-Module -Name Pester
   
