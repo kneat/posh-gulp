@@ -25,7 +25,7 @@ module.exports = function (gulp, file) {
    else {
       const tasks = JSON.parse(result.stdout);
       Object.keys(tasks).forEach(function (key) {
-         const cb = (cb) => {
+         gulp.task(key, gulp.series(tasks[key], () => {
             const execSwitches = switches.concat(file, key);
             const taskProcess = spawn('powershell', execSwitches, { stdio: ['inherit', 'pipe'] });
 
@@ -61,12 +61,8 @@ module.exports = function (gulp, file) {
                   });
             });
 
-            taskProcess.on('close', () => cb());
-         };
-
-         const dependencyTasks = tasks[key];
-
-         gulp.task(key, gulp.series(dependencyTasks, cb));
+            return taskProcess;
+         }));
       });
    }
 };
