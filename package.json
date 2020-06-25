@@ -1,6 +1,6 @@
 {
   "name": "posh-gulp",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "write gulp tasks in powershell",
   "keywords": [
     "powershell",
