@@ -41,6 +41,7 @@ Describe "Running tasks from gulp" {
          "* Importing Tasks *"
          "*"
          "*"
+         "*"
          "* simple write-host"
          "* simple write-output"
          "* simple write-error"
@@ -67,6 +68,7 @@ Describe "Running tasks from gulp" {
 
       @(
          "* Importing Tasks *"
+         "*"
          "*"
          "*"
          "* simple write-host"

@@ -30,8 +30,8 @@ Describe "Publish-Tasks @()" {
     Context "Three task with no deps or action" {
         BeforeEach {
             Add-Task "one"
-            Add-Task "two" @() {}
             Add-Task "three" -action {}
+            Add-Task "two" @() {}
             $result = Publish-Tasks @()
         }
         It 'result should be {"one":[],"three":[],"two":[]}' {
