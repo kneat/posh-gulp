@@ -22,6 +22,6 @@ jobs:
       uses: Amadevus/pwsh-script@v1.0.0
       with:
         script: |
-          Import-Module -Name Pester
+          Install-Module -Name Pester
           Invoke-Pester -EnableExit
   
