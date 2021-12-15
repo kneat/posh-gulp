@@ -50,6 +50,26 @@ Describe "Publish-Tasks 'name'" {
         Remove-Module Gulp
     }
 
+    Context "'name' outputs 'test output arg0'" {
+        BeforeEach {
+            Add-Task 'name' @() {param([string] $arg0) "test output" + $arg0} ' arg0'
+            $result = Publish-Tasks 'name'
+        }
+        It "named on publish should output 'test output arg0'" {
+            $result | Should Match """test output arg0"""
+        }
+    }
+
+    Context "'name' outputs 'test output arg1'" {
+        BeforeEach {
+            Add-Task 'name' @() {param([string] $arg0, [string] $arg1) "test output" + $arg1} @(' arg0', ' arg1')
+            $result = Publish-Tasks 'name'
+        }
+        It "named on publish should output 'test output arg1'" {
+            $result | Should Match """test output arg1"""
+        }
+    }
+
     Context "'name' outputs 'test output'" {
         BeforeEach {
             Add-Task 'name' @() {"test output"}
