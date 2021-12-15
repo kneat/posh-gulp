@@ -1,6 +1,6 @@
 $script:taskDeps = [ordered]@{}
 $script:taskBlocks = New-Object -TypeName PSObject
-
+$script:taskArgs = [ordered]@{}
 function Add-Task {
     [CmdletBinding()]
     param(
@@ -10,10 +10,13 @@ function Add-Task {
         [string[]]
         $deps = @(),
         [ScriptBlock]
-        $action = {}
+        $action = {},
+        [string[]]
+        $arguments = @()
     )
     process {
         $script:taskDeps[$name] = $deps
+        $script:taskArgs[$name] = $arguments
         $script:taskBlocks |
             Add-Member `
                 -MemberType ScriptMethod `
@@ -33,7 +36,7 @@ function Invoke-Task($name){
     try {
         $global:VerbosePreference = "Continue"
         $global:DebugPreference = "Continue"
-        $result = ((Invoke-Command -Verbose $script:taskBlocks.$name.Script) *>&1)
+        $result = ((Invoke-Command -Verbose $script:taskBlocks.$name.Script -ArgumentList $script:taskArgs.$name) *>&1)
     } finally {
         $global:VerbosePreference = $originalVerbosePreference
         $global:DebugPreference = $originalDebugPreference
