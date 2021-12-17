@@ -26,7 +26,7 @@ module.exports = function (gulp, file) {
       const tasks = JSON.parse(result.stdout);
       Object.keys(tasks).forEach(function (key) {
          gulp.task(key, gulp.series(tasks[key], () => {
-            const execSwitches = switches.concat(file, key);
+            const execSwitches = switches.concat(file, key, process.argv);
             const taskProcess = spawn('powershell', execSwitches, { stdio: ['inherit', 'pipe'] });
 
             const taskLabel = colors.cyan(key);
