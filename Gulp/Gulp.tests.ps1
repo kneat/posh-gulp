@@ -13,7 +13,7 @@ Describe "Publish-Tasks @()" {
             $result = Publish-Tasks @()
         }
         It "should have output of {}" {
-            $result | Should Be "{}"
+            $result | Should -Be "{}"
         }
     }
 
@@ -23,7 +23,7 @@ Describe "Publish-Tasks @()" {
             $result = Publish-Tasks @()
         }
         It "published should be {""empty"":[]]}" {
-            $result | Should Be "{""empty"":[]}"
+            $result | Should -Be "{""empty"":[]}"
         }
     }
 
@@ -35,7 +35,7 @@ Describe "Publish-Tasks @()" {
             $result = Publish-Tasks @()
         }
         It 'result should be {"one":[],"three":[],"two":[]}' {
-            $result | Should Be  '{"one":[],"three":[],"two":[]}'
+            $result | Should -Be  '{"one":[],"three":[],"two":[]}'
         }
     }
 }
@@ -56,7 +56,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "named on publish should output 'test output arg0'" {
-            $result | Should Match """test output arg0"""
+            $result | Should -Match """test output arg0"""
         }
     }
 
@@ -66,7 +66,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "named on publish should output 'test output arg1'" {
-            $result | Should Match """test output arg1"""
+            $result | Should -Match """test output arg1"""
         }
     }
 
@@ -76,7 +76,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "named on publish should output 'test output'" {
-            $result | Should Match """test output"""
+            $result | Should -Match """test output"""
         }
     }
     Context "'name' is empty task" {
@@ -85,7 +85,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "should have no output" {
-            $result | Should BeLike ""
+            $result | Should -BeLike ""
         }
     }
     Context "'name' prints `$PSScriptRoot" {
@@ -96,7 +96,7 @@ Describe "Publish-Tasks 'name'" {
             $result = Publish-Tasks 'name'
         }
         It "result should be like ""*\Gulp""" {
-            ($result | ConvertFrom-Json).Message | Should BeLike "*\Gulp"
+            ($result | ConvertFrom-Json).Message | Should -BeLike "*\Gulp"
         }
     }
     Context "'name' writes 'fail' error" {
@@ -111,13 +111,13 @@ Describe "Publish-Tasks 'name'" {
             ) > $null) 3>&1
         }
         It "result should be 'fail'" {
-            $result | Should Match """fail"""
+            $result | Should -Match """fail"""
         }
         It "error stream should be null" {
-            $errors | Should Be $null
+            $errors | Should -Be $null
         }
         It "warning stream should be null" {
-            $warnings | Should Be $null
+            $warnings | Should -Be $null
         }
     }
     Context "'name' writes 'careful!' warning" {
@@ -132,16 +132,16 @@ Describe "Publish-Tasks 'name'" {
             ) > $null) 3>&1
         }
         It 'result message should be "careful!"' {
-           ($result | ConvertFrom-Json).Message | Should Be "careful!"
+           ($result | ConvertFrom-Json).Message | Should -Be "careful!"
         }
         It 'result level should be "warning"' {
-           ($result | ConvertFrom-Json).Level | Should Be "warning"
+           ($result | ConvertFrom-Json).Level | Should -Be "warning"
         }
         It "error stream should be null" {
-            $errors | Should Be $null
+            $errors | Should -Be $null
         }
         It "warning stream should be null" {
-            $warnings | Should Be $null
+            $warnings | Should -Be $null
         }
     }
 }
