@@ -6,7 +6,6 @@ const colors = require('ansi-colors');
 const log = require('fancy-log');
 const args = require('yargs').argv;
 
-
 const switches = [
    '-NoProfile',
    '-NoLogo',
@@ -27,7 +26,7 @@ module.exports = function (gulp, file) {
       Object.keys(tasks).forEach(function (key) {
          const task = () => {
             const execSwitches = switches.concat(file, key, process.argv);
-            const taskProcess = spawn('powershell', execSwitches, { stdio: ['inherit', 'pipe'] });
+            const taskProcess = spawn('powershell', execSwitches, { stdio: ['inherit', 'pipe', 'inherit'] });
             const taskLabel = colors.cyan(key);
             const debugOrVerbose = (args.debug || args.verbose);
 
@@ -36,7 +35,7 @@ module.exports = function (gulp, file) {
                   .toString()
                   .split(/\r?\n/)
                   .filter(l => l !== '')
-                  .map(l => JSON.parse(l))
+                  .map(lineAsJson)
                   .forEach(l => {
                      switch (l.level)
                      {
@@ -69,3 +68,14 @@ module.exports = function (gulp, file) {
       });
    }
 };
+
+function lineAsJson(line) {
+   try{
+      return JSON.parse(line)
+   } catch {
+      return {
+         level: 'unknown',
+         message: line
+      };
+   }
+}
