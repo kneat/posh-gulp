@@ -8,14 +8,14 @@ Tasks
 const gulp = require('gulp');
 const pulp = require('posh-gulp');
 
-pulp(gulp, './gulpfile.ps1');
-
 gulp.task('build', (cb) => {
    console.log('building');
    cb();
 });
 
-gulp.task('default', ['posh:simple']);
+pulp(gulp, './gulpfile.ps1');
+
+gulp.task('default', gulp.series('posh:simple'));
 ```
 
 ### `gulpfile.ps1`
