@@ -5,19 +5,22 @@ const spawn = require('child_process').spawn;
 const colors = require('ansi-colors');
 const log = require('fancy-log');
 const args = require('yargs').argv;
+const commandExists = require('command-exists').sync;
 
 const switches = [
    '-NoProfile',
    '-NoLogo',
    '-NonInteractive',
    '-File'
-];
+]; 
 
-module.exports = function (gulp, file) {
+module.exports = function (gulp, file, options = { runOnWindowsPowershell: false }) {
 
    log('Importing Tasks', colors.magenta(file));
 
-   const result = run('powershell', switches.concat(file));
+   const powershellCommand = !options.runOnWindowsPowershell && commandExists('pwsh') ? 'pwsh' : 'powershell';
+
+   const result = run(powershellCommand, switches.concat(file));
 
    if (result.stderr.length > 0)
       log.error(result.stderr.toString());
@@ -26,7 +29,7 @@ module.exports = function (gulp, file) {
       Object.keys(tasks).forEach(function (key) {
          const task = () => {
             const execSwitches = switches.concat(file, key, process.argv);
-            const taskProcess = spawn('powershell', execSwitches, { stdio: ['inherit', 'pipe', 'inherit'] });
+            const taskProcess = spawn(powershellCommand, execSwitches, { stdio: ['inherit', 'pipe', 'inherit'] });
             const taskLabel = colors.cyan(key);
             const debugOrVerbose = (args.debug || args.verbose);
 
