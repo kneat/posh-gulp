@@ -12,18 +12,23 @@ const switches = [
    '-NoLogo',
    '-NonInteractive',
    '-File'
-]; 
+];
 
 module.exports = function (gulp, file, options = { runOnWindowsPowershell: false }) {
-
    log('Importing Tasks', colors.magenta(file));
 
-   const powershellCommand = !options.runOnWindowsPowershell && commandExists('pwsh') ? 'pwsh' : 'powershell';
+   const powershellCommand = !options.runOnWindowsPowershell ? 'pwsh' : 'powershell';
+
+   if (!commandExists(powershellCommand)) {
+      console.error(`Command ${powershellCommand} not found. Please make sure it is installed and accessible through the PATH envvar.`);
+      process.exit(1);
+   }
 
    const result = run(powershellCommand, switches.concat(file));
+   const debugOrVerbose = (args.debug || args.verbose);
 
-   if (result.stderr.length > 0)
-      log.error(result.stderr.toString());
+   if (result.error || result.stderr && result.stderr.length > 0)
+      log.error(result.error || result.stderr.toString());
    else {
       const tasks = JSON.parse(result.stdout);
       Object.keys(tasks).forEach(function (key) {
@@ -31,7 +36,6 @@ module.exports = function (gulp, file, options = { runOnWindowsPowershell: false
             const execSwitches = switches.concat(file, key, process.argv);
             const taskProcess = spawn(powershellCommand, execSwitches, { stdio: ['inherit', 'pipe', 'inherit'] });
             const taskLabel = colors.cyan(key);
-            const debugOrVerbose = (args.debug || args.verbose);
 
             taskProcess.stdout.on('data', data => {
                data
@@ -39,28 +43,7 @@ module.exports = function (gulp, file, options = { runOnWindowsPowershell: false
                   .split(/\r?\n/)
                   .filter(l => l !== '')
                   .map(lineAsJson)
-                  .forEach(l => {
-                     switch (l.level)
-                     {
-                        case 'debug':
-                           debugOrVerbose && log.info(taskLabel, l.message);
-                           break;
-                        case 'verbose':
-                           args.verbose && log.info(taskLabel, l.message);
-                           break;
-                        case 'information':
-                           log.info(taskLabel, l.message);
-                           break;
-                        case 'warning':
-                           log.warn(taskLabel, l.message);
-                           break;
-                        case 'error':
-                           log.error(taskLabel, l.message);
-                           break;
-                        default:
-                           log(taskLabel, l.message);
-                     }
-                  });
+                  .forEach(l => logForLevel(l, taskLabel, debugOrVerbose));
             });
 
             return taskProcess;
@@ -80,5 +63,29 @@ function lineAsJson(line) {
          level: 'unknown',
          message: line
       };
+   }
+}
+
+function logForLevel(l, taskLabel, debugOrVerbose) {
+   switch (l.level)
+   {
+      case 'debug':
+         debugOrVerbose && log.info(taskLabel, l.message);
+         break;
+      case 'verbose':
+         args.verbose && log.info(taskLabel, l.message);
+         break;
+      case 'information':
+         log.info(taskLabel, l.message);
+         break;
+      case 'warning':
+         // this should use log.warn(), but for some reason when called via gulp and level is warning, stderr seems to be suppressed
+         log.info(taskLabel, l.message);
+         break;
+      case 'error':
+         log.error(taskLabel, l.message);
+         break;
+      default:
+         log(taskLabel, l.message);
    }
 }
