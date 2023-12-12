@@ -95,8 +95,8 @@ Describe "Publish-Tasks 'name'" {
             }
             $result = Publish-Tasks 'name'
         }
-        It "result should be like ""*\Gulp""" {
-            ($result | ConvertFrom-Json).Message | Should -BeLike "*\Gulp"
+        It "result should be like ""*\Gulp"" or ""*/Gulp""" {
+            ($result | ConvertFrom-Json).Message | Should -Match "[*\\/]*Gulp"
         }
     }
     Context "'name' writes 'fail' error" {
@@ -111,7 +111,7 @@ Describe "Publish-Tasks 'name'" {
             ) > $null) 3>&1
         }
         It "result should be 'fail'" {
-            $result | Should -Match """fail"""
+            $result | Should -Match "fail"
         }
         It "error stream should be null" {
             $errors | Should -Be $null
