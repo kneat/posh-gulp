@@ -115,7 +115,7 @@ Describe "Publish-Tasks 'name'" {
             ) > $null) 3>&1
         }
         It "result should be 'fail'" {
-            $result | Should -Match "fail"
+            ($result | ConvertFrom-Json).Message | Should -Be "fail"
         }
         It "error stream should be null" {
             $errors | Should -Be $null
