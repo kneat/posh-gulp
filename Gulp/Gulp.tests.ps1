@@ -102,7 +102,11 @@ Describe "Publish-Tasks 'name'" {
     Context "'name' writes 'fail' error" {
         BeforeEach {
             Add-Task "name" @() {
-                Write-Error 'fail'
+                try {
+                    Write-Error 'fail'
+                }
+                catch {
+                }
             }
             $warnings = $((
                 $errors = $((
