@@ -19,8 +19,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
     - run: npm ci
     - name: pester
-      uses: Amadevus/pwsh-script@v2.0.3
-      with:
-        script: |
-          if (!(Get-Module -ListAvailable -Name Pester)) { Install-Module -Name Pester -Scope CurrentUser }
-          Invoke-Pester
+      run: |
+        Set-PSRepository psgallery -InstallationPolicy trusted
+        Install-Module -Name Pester -RequiredVersion 5.5.0 -Confirm:$false -Force
+        Invoke-Pester
+      shell: pwsh
