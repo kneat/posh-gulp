@@ -101,6 +101,7 @@ Describe "Publish-Tasks 'name'" {
     }
     Context "'name' writes 'fail' error" {
         BeforeEach {
+            $ErrorActionPreference = 'Continue'
             Add-Task "name" @() {
                 Write-Error 'fail'
             }
