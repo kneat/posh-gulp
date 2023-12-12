@@ -22,5 +22,5 @@ jobs:
       uses: Amadevus/pwsh-script@v2.0.3
       with:
         script: |
-          Install-Module -Name Pester -Force
-          Invoke-Pester -EnableExit
+          if (!(Get-Module -ListAvailable -Name Pester)) { Install-Module -Name Pester -Scope CurrentUser }
+          Invoke-Pester
