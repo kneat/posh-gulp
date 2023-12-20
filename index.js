@@ -14,15 +14,26 @@ const switches = [
    '-File'
 ];
 
+const powershellCommand = 'powershell';
+const pwshCommand = 'pwsh';
+
+const getPowershellCommand = (options) => {
+  if (options.runOnWindowsPowershell || !commandExists(pwshCommand)) {
+     return powershellCommand;
+  }
+  
+  return pwshCommand;
+};
+
 module.exports = function (gulp, file, options = { runOnWindowsPowershell: false }) {
-   log('Importing Tasks', colors.magenta(file));
-
-   const powershellCommand = !options.runOnWindowsPowershell ? 'pwsh' : 'powershell';
-
+   const powershellCommand = getPowershellCommand(options);
+   
    if (!commandExists(powershellCommand)) {
       console.error(`Command ${powershellCommand} not found. Please make sure it is installed and accessible through the PATH envvar.`);
       process.exit(1);
    }
+
+   log(`Importing Tasks using ${powershellCommand}`, colors.magenta(file));
 
    const result = run(powershellCommand, switches.concat(file));
    const debugOrVerbose = (args.debug || args.verbose);
