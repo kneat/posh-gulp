@@ -21,13 +21,13 @@ const getPowershellCommand = (options) => {
   if (options.runOnWindowsPowershell || !commandExists(pwshCommand)) {
      return powershellCommand;
   }
-  
+
   return pwshCommand;
 };
 
-module.exports = function (gulp, file, options = { runOnWindowsPowershell: false }) {
+module.exports = async function (gulp, file, options = { runOnWindowsPowershell: false }) {
    const powershellCommand = getPowershellCommand(options);
-   
+
    if (!commandExists(powershellCommand)) {
       console.error(`Command ${powershellCommand} not found. Please make sure it is installed and accessible through the PATH envvar.`);
       process.exit(1);
@@ -35,13 +35,14 @@ module.exports = function (gulp, file, options = { runOnWindowsPowershell: false
 
    log(`Importing Tasks using ${powershellCommand}`, colors.magenta(file));
 
-   const result = run(powershellCommand, switches.concat(file));
    const debugOrVerbose = (args.debug || args.verbose);
+   const result = run(powershellCommand, switches.concat(file));
 
    if (result.error || result.stderr && result.stderr.length > 0)
       log.error(result.error || result.stderr.toString());
    else {
-      const tasks = JSON.parse(result.stdout);
+      const tasks = getTasksFromResult(result.stdout.toString());
+
       Object.keys(tasks).forEach(function (key) {
          const task = () => {
             const execSwitches = switches.concat(file, key, process.argv);
@@ -52,7 +53,7 @@ module.exports = function (gulp, file, options = { runOnWindowsPowershell: false
                data
                   .toString()
                   .split(/\r?\n/)
-                  .filter(l => l !== '')
+                  .filter(Boolean)
                   .map(lineAsJson)
                   .forEach(l => logForLevel(l, taskLabel, debugOrVerbose));
             });
@@ -65,6 +66,22 @@ module.exports = function (gulp, file, options = { runOnWindowsPowershell: false
       });
    }
 };
+
+function getTasksFromResult(result) {
+   const lines = result.toString().split(/\r?\n/).filter(Boolean);
+
+   for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      try {
+         const tasks = JSON.parse(line);
+         return tasks;
+      } catch {
+         log.info(line);
+      }
+   }
+
+   return [];
+}
 
 function lineAsJson(line) {
    try{
