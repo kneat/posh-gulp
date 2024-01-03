@@ -25,7 +25,7 @@ const getPowershellCommand = (options) => {
   return pwshCommand;
 };
 
-module.exports = async function (gulp, file, options = { runOnWindowsPowershell: false }) {
+module.exports = function (gulp, file, options = { runOnWindowsPowershell: false }) {
    const powershellCommand = getPowershellCommand(options);
 
    if (!commandExists(powershellCommand)) {
